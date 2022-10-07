@@ -1,5 +1,6 @@
 using Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Opensea.Controllers;
 
@@ -15,11 +16,16 @@ public class TokenController : ControllerBase, IDisposable
 
     private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
     private readonly ILogger<TokenController> _logger;
+    private readonly IMemoryCache _cache;
     private readonly HttpClient _httpClient;
 
-    public TokenController(ILogger<TokenController> logger, IHttpClientFactory clientFactory)
+    public TokenController(
+        ILogger<TokenController> logger, 
+        IHttpClientFactory clientFactory,
+        IMemoryCache cache)
     {
         _logger = logger;
+        _cache = cache;
         _httpClient = clientFactory.CreateClient("opensea");
         _logger.LogInformation("Started Token controller");
     }
@@ -30,9 +36,15 @@ public class TokenController : ControllerBase, IDisposable
     public async Task<ContentResult> Get(string assetContractAddress, string tokenId)
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
-
-        var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
-        var json = await _httpClient.GetStringAsync(url);
+        
+        var key = $"{assetContractAddress}_{tokenId}";
+        if (!_cache.TryGetValue(key, out string json))
+        {
+            _logger.LogInformation("Initializing cache");
+            var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
+            json = await _httpClient.GetStringAsync(url);
+            _cache.Set(key, json, TimeSpan.FromMinutes(10));
+        }
 
         return Content(json, ApplicationJson);
     }
