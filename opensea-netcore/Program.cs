@@ -1,8 +1,4 @@
-using System;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +9,11 @@ builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient("opensea", c =>
 {
+    var apikey = Environment.GetEnvironmentVariable("OPENSEA_API_KEY");
     c.BaseAddress = new Uri("https://api.opensea.io/");
     c.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
     c.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "centralex");
-    c.DefaultRequestHeaders.Add("X-API-KEY", "YOUR-TOKEN-HERE");
+    c.DefaultRequestHeaders.Add("X-API-KEY", apikey);
 });
 builder.Services.AddControllers();
 

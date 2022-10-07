@@ -1,17 +1,19 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Opensea.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Produces("application/json")]
 public class TokenController : ControllerBase, IDisposable
 {
+    static TokenController()
+    {
+        ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+    }
+
+    private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
     private readonly ILogger<TokenController> _logger;
     private readonly HttpClient _httpClient;
 
@@ -24,15 +26,15 @@ public class TokenController : ControllerBase, IDisposable
 
     // GET: api/token/5/5
     [HttpGet("{assetContractAddress}/{tokenId}", Name = "Get")]
-    [ProducesResponseType(StatusCodes.Status200OK , Type = typeof(Token))]
-    public async Task<IResult> Get(string assetContractAddress, string tokenId)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
+    public async Task<ContentResult> Get(string assetContractAddress, string tokenId)
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
-        
+
         var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
         var json = await _httpClient.GetStringAsync(url);
-        
-        return Results.Json(json);
+
+        return Content(json, ApplicationJson);
     }
 
     public void Dispose()
