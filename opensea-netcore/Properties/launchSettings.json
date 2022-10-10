@@ -9,7 +9,8 @@
       "applicationUrl": "https://localhost:7043;http://localhost:5287",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "OPENSEA_API_KEY": "YOUR-KEY"
+        "OPENSEA_API_KEY": "YOUR-KEY",
+        "ASPNETCORE_URLS": "https://localhost:7043;http://localhost:5287"
       }
     },
     "opensea_netcore_prod": {
@@ -20,7 +21,8 @@
       "applicationUrl": "https://localhost:7043;http://localhost:5287",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production",
-        "OPENSEA_API_KEY": "YOUR-KEY"
+        "OPENSEA_API_KEY": "YOUR-KEY",
+        "ASPNETCORE_URLS": "https://localhost:7043;http://localhost:5287"
       }
     }
   }
