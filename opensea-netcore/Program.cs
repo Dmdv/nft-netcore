@@ -1,3 +1,6 @@
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
 
@@ -9,12 +12,12 @@ builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient("opensea", c =>
 {
-    var apikey = Environment.GetEnvironmentVariable("OPENSEA_API_KEY");
     c.BaseAddress = new Uri("https://api.opensea.io/");
     c.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
     c.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "centralex");
-    c.DefaultRequestHeaders.Add("X-API-KEY", apikey);
+    c.DefaultRequestHeaders.Add("X-API-KEY", Environment.GetEnvironmentVariable("OPENSEA_API_KEY"));
 });
+builder.Services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(builder.Configuration["GraphQLUri"], new NewtonsoftJsonSerializer()));
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

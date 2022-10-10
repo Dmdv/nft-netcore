@@ -1,6 +1,7 @@
 using Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using NuGet.Protocol;
 
 namespace Opensea.Controllers;
 
@@ -9,11 +10,6 @@ namespace Opensea.Controllers;
 [Produces("application/json")]
 public class TokenController : ControllerBase, IDisposable
 {
-    static TokenController()
-    {
-        ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-    }
-
     private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
     private readonly ILogger<TokenController> _logger;
     private readonly IMemoryCache _cache;
@@ -29,9 +25,14 @@ public class TokenController : ControllerBase, IDisposable
         _httpClient = clientFactory.CreateClient("opensea");
         _logger.LogInformation("Started Token controller");
     }
+    
+    static TokenController()
+    {
+        ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+    }
 
-    // GET: api/token/5/5
-    [HttpGet("{assetContractAddress}/{tokenId}", Name = "Get")]
+    // GET: token/5/5
+    [HttpGet("{assetContractAddress}/{tokenId}", Name = "GetToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
     public async Task<ContentResult> Get(string assetContractAddress, string tokenId)
     {
