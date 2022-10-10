@@ -3,6 +3,7 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
+using Opensea.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +19,19 @@ builder.Services.AddHttpClient("opensea", c =>
     c.DefaultRequestHeaders.Add("X-API-KEY", Environment.GetEnvironmentVariable("OPENSEA_API_KEY"));
 });
 builder.Services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(builder.Configuration["GraphQLUri"], new NewtonsoftJsonSerializer()));
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(c =>
+{
+    // returning type with snake policy
+    c.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy();
+}); 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o =>
+{
+    // swagger schema with snake filter
+    o.SchemaFilter<SnakeCaseSchemaFilter>();
+});
 
 var app = builder.Build();
 

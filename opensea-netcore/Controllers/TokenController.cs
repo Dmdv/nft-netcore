@@ -14,16 +14,19 @@ public class TokenController : ControllerBase, IDisposable
     private readonly ILogger<TokenController> _logger;
     private readonly IMemoryCache _cache;
     private readonly HttpClient _httpClient;
+    private readonly int _minutesInCache;
 
     public TokenController(
         ILogger<TokenController> logger, 
         IHttpClientFactory clientFactory,
-        IMemoryCache cache)
+        IMemoryCache cache,
+        IConfiguration configuration)
     {
         _logger = logger;
         _cache = cache;
         _httpClient = clientFactory.CreateClient("opensea");
         _logger.LogInformation("Started Token controller");
+        _minutesInCache = Convert.ToInt32(configuration["MinutesInCache"]);
     }
     
     static TokenController()
@@ -44,7 +47,10 @@ public class TokenController : ControllerBase, IDisposable
             _logger.LogInformation("Initializing cache");
             var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
             json = await _httpClient.GetStringAsync(url);
-            _cache.Set(key, json, TimeSpan.FromMinutes(10));
+            // Is it faster?
+            // var data = await _httpClient.GetAsync(url);
+            // json = await data.Content.ReadAsStringAsync();
+            _cache.Set(key, json, TimeSpan.FromMinutes(_minutesInCache));
         }
 
         return Content(json, ApplicationJson);
