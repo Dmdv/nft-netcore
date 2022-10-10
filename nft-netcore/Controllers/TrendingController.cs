@@ -1,9 +1,6 @@
-using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Client.Abstractions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Nft.Models.Icytools;
 
 namespace Nft.Controllers;

@@ -1,11 +1,5 @@
-using System;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Nft.Controllers;
 
@@ -14,7 +8,6 @@ namespace Nft.Controllers;
 [Produces("application/json")]
 public class TokenController : ControllerBase, IDisposable
 {
-    private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
     private readonly ILogger<TokenController> _logger;
     private readonly IMemoryCache _cache;
     private readonly HttpClient _httpClient;
@@ -32,11 +25,6 @@ public class TokenController : ControllerBase, IDisposable
         _logger.LogInformation("Started Token controller");
         _minutesInCache = Convert.ToInt32(configuration["MinutesInCache"]);
     }
-    
-    static TokenController()
-    {
-        ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-    }
 
     // GET: token/5/5
     [HttpGet("{assetContractAddress}/{tokenId}", Name = "GetToken")]
@@ -45,19 +33,17 @@ public class TokenController : ControllerBase, IDisposable
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
         var key = $"{assetContractAddress}_{tokenId}";
-        if (!_cache.TryGetValue(key, out string json))
+        if (!_cache.TryGetValue(key, out Root? token) || token == null)
         {
-            _logger.LogInformation("Initializing cache");
             var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
-            json = await _httpClient.GetStringAsync(url);
-            // Is it faster?
-            // var data = await _httpClient.GetAsync(url);
-            // json = await data.Content.ReadAsStringAsync();
-            _cache.Set(key, json, TimeSpan.FromMinutes(_minutesInCache));
+            var resp = await _httpClient.GetAsync(url);
+            resp.EnsureSuccessStatusCode();
+        
+            token = await resp.Content.ReadFromJsonAsync<Root>();
+            
+            _cache.Set(key, token, TimeSpan.FromMinutes(_minutesInCache));
         }
-
-        var token = JsonSerializer.Deserialize<Root>(json);
-
+        
         return token;
     }
 
