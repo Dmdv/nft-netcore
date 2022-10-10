@@ -10,14 +10,8 @@ namespace Nft.Controllers;
 [Produces("application/json")]
 public class TrendingController : ControllerBase
 {
-    private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
     private readonly IGraphQLClient _client;
     private readonly ILogger<TrendingController> _logger;
-
-    static TrendingController()
-    {
-        ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-    }
 
     // GET: Trending
     public TrendingController(IGraphQLClient client, ILogger<TrendingController> logger)

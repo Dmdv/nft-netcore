@@ -5,7 +5,7 @@ namespace Nft.Models.Icytools;
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
 public record Edge(
     [property: JsonPropertyName("cursor")] string Cursor,
-    [property: JsonPropertyName("node")] Node Node
+    [property: JsonPropertyName("node")] Node Nodes
 );
 
 public record Node(

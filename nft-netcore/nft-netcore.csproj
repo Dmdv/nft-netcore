@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="GraphQL.Client" Version="5.1.0" />
-        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="5.1.0" />
+        <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="5.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>

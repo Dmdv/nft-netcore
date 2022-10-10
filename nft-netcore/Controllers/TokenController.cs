@@ -1,6 +1,6 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Nft.Models.Opensea;
 
 namespace Nft.Controllers;
 
@@ -35,8 +35,7 @@ public class TokenController : ControllerBase, IDisposable
 
     // GET: token/5/5
     [HttpGet("{assetContractAddress}/{tokenId}", Name = "GetToken")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
-    public async Task<ContentResult> Get(string assetContractAddress, string tokenId)
+    public async Task<Root?> Get(string assetContractAddress, string tokenId)
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
@@ -52,7 +51,9 @@ public class TokenController : ControllerBase, IDisposable
             _cache.Set(key, json, TimeSpan.FromMinutes(_minutesInCache));
         }
 
-        return Content(json, ApplicationJson);
+        var token = JsonSerializer.Deserialize<Root>(json);
+
+        return token;
     }
 
     public void Dispose()
