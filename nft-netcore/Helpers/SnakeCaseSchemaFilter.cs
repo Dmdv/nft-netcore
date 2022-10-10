@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GraphQL.Client.Abstractions.Utilities;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;

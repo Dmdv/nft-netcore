@@ -1,5 +1,7 @@
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
 
+using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 // ReSharper disable ClassNeverInstantiated.Global
