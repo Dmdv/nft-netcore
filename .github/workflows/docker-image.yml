@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file ./opensea-netcore/Dockerfile --tag opensea-core:$(date +%s)
+      run: docker build . --file ./nft-netcore/Dockerfile --tag nft-core:$(date +%s)
