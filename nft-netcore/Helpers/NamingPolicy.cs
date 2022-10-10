@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Opensea.Helpers;
+namespace Nft.Helpers;
 
 public class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
 {

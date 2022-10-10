@@ -5,8 +5,10 @@
 
 .idea/.idea.opensea-netcore.dir/.idea/
 
-opensea-netcore/obj/
+nft-netcore/obj/
 
-opensea-netcore/bin/
+nft-netcore/bin/
 
-opensea-netcore/build/
+nft-netcore/build/
+
+.idea/.idea.nft-netcore/.idea/

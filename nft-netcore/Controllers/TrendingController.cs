@@ -1,44 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Client.Abstractions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
+using Nft.Models.Icytools;
 
-namespace Opensea.Controllers
+namespace Nft.Controllers;
+
+[Route("[controller]")]
+[ApiController]
+[Produces("application/json")]
+public class TrendingController : ControllerBase
 {
-    [Route("[controller]")]
-    [ApiController]
-    [Produces("application/json")]
-    public class TrendingController : ControllerBase
+    private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
+    private readonly IGraphQLClient _client;
+    private readonly ILogger<TrendingController> _logger;
+
+    static TrendingController()
     {
-        private static readonly Microsoft.Net.Http.Headers.MediaTypeHeaderValue? ApplicationJson;
-        private readonly IGraphQLClient _client;
-        private readonly ILogger<TrendingController> _logger;
+        ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+    }
 
-        static TrendingController()
-        {
-            ApplicationJson = Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-        }
+    // GET: Trending
+    public TrendingController(IGraphQLClient client, ILogger<TrendingController> logger)
+    {
+        _client = client;
+        _logger = logger;
+    }
 
-        // GET: Trending
-        public TrendingController(IGraphQLClient client, ILogger<TrendingController> logger)
-        {
-            _client = client;
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public async Task<ContentResult> Get()
-        {
-            _logger.LogInformation("Fetching trending collection");
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<TrendingCollections> Get()
+    {
+        _logger.LogInformation("Fetching trending collection");
             
-            var query = new GraphQLRequest
-            {
-                Query = @"
+        var query = new GraphQLRequest
+        {
+            Query = @"
                         query Contracts($timePeriod: TrendingCollectionsTimePeriodEnum) {
                             trendingCollections(timePeriod: $timePeriod, orderBy: SALES) {
                                 edges {
@@ -75,18 +71,17 @@ namespace Opensea.Controllers
                             }
                         }
                         "
-            };
+        };
 
-            var json = await _client.SendQueryAsync<object>(query);
+        var json = await _client.SendQueryAsync<TrendingCollectionsRoot>(query);
 
-            return Content(json.Data.ToJson(), ApplicationJson);
-        }
-
-        // // GET: Trending/5
-        // [HttpGet("{id}", Name = "Get")]
-        // public string Get(int id)
-        // {
-        //     return "value";
-        // }
+        return json.Data.TrendingCollections;
     }
+
+    // // GET: Trending/5
+    // [HttpGet("{id}", Name = "Get")]
+    // public string Get(int id)
+    // {
+    //     return "value";
+    // }
 }

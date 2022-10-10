@@ -1,9 +1,8 @@
-using Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using NuGet.Protocol;
+using Nft.Models.Opensea;
 
-namespace Opensea.Controllers;
+namespace Nft.Controllers;
 
 [ApiController]
 [Route("[controller]")]

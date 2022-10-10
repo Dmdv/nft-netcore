@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "opensea-netcore", "opensea-netcore\opensea-netcore.csproj", "{BC6D69EF-C124-4400-958A-165A827307CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nft-netcore", "nft-netcore\nft-netcore.csproj", "{BC6D69EF-C124-4400-958A-165A827307CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,7 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
-using Opensea.Helpers;
+using Nft.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +65,6 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 // app.UseAuthorization();
 app.MapControllers();
 
-app.MapGet("/", () => "This is the root of opensea service");
+app.MapGet("/", () => "This is the root of nft service");
 
 app.Run();
