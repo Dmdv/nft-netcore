@@ -131,7 +131,7 @@ public record PaymentToken(
     // [property: JsonPropertyName("usd_price")] decimal UsdPrice
 );
 
-public record Root(
+public record Token(
         [property: JsonPropertyName("id")] int Id,
         [property: JsonPropertyName("num_sales")] int NumSales,
         [property: JsonPropertyName("background_color")] object BackgroundColor,

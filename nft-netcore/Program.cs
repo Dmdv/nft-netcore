@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Nft.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,10 @@ builder.Services.AddControllers().AddJsonOptions(c =>
     // returning type with snake policy
     // c.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy();
     c.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    c.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    c.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    c.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+    c.JsonSerializerOptions.AddContext<SerializationContext>();
 }); 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

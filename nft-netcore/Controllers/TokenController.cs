@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Nft.Helpers;
 
 namespace Nft.Controllers;
 
@@ -28,18 +30,18 @@ public class TokenController : ControllerBase, IDisposable
 
     // GET: token/5/5
     [HttpGet("{assetContractAddress}/{tokenId}", Name = "GetToken")]
-    public async Task<Root?> Get(string assetContractAddress, string tokenId)
+    public async Task<Token?> Get(string assetContractAddress, string tokenId)
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
         var key = $"{assetContractAddress}_{tokenId}";
-        if (!_cache.TryGetValue(key, out Root? token) || token == null)
+        if (!_cache.TryGetValue(key, out Token? token) || token == null)
         {
             var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
             var resp = await _httpClient.GetAsync(url);
             resp.EnsureSuccessStatusCode();
         
-            token = await resp.Content.ReadFromJsonAsync<Root>();
+            token = await resp.Content.ReadFromJsonAsync<Token>(new JsonSerializerOptions(JsonSerializerDefaults.Web));
             
             _cache.Set(key, token, TimeSpan.FromMinutes(_minutesInCache));
         }
