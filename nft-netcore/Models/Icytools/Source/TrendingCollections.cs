@@ -80,7 +80,7 @@ public class PageInfo
     public string EndCursor { get; set; }
 }
 
-public class Root
+public class IcytoolsRoot
 {
     [JsonPropertyName("data")]
     public Data Data { get; set; }

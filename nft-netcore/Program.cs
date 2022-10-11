@@ -28,9 +28,8 @@ builder.Services.AddControllers().AddJsonOptions(c =>
     // c.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy();
     c.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     c.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-    c.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     c.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString; // double and decimals
-    c.JsonSerializerOptions.AddContext<SerializationContext>();
+    c.JsonSerializerOptions.AddContext<CommonSerializationContext>();
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

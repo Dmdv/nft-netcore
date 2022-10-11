@@ -34,20 +34,19 @@ public class TokenController : ControllerBase, IDisposable
 
     // GET: token/5/5
     [HttpGet("{assetContractAddress}/{tokenId}", Name = "GetToken")]
-    public async Task<Token?> Get(string assetContractAddress, string tokenId)
+    public async Task<Nft.Models.Opensea.Target.OpenseaRoot?> Get(string assetContractAddress, string tokenId)
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
-        var key = $"{assetContractAddress}/{tokenId}";
-        if (!_cache.TryGetValue(key, out Token? token) || token == null)
+        var requestUri = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
+        if (!_cache.TryGetValue(requestUri, out Nft.Models.Opensea.Target.OpenseaRoot? token) || token == null)
         {
-            var url = $"api/v1/asset/{key}/";
-            var resp = await _httpClient.GetAsync(url);
+            var resp = await _httpClient.GetAsync(requestUri);
             resp.EnsureSuccessStatusCode();
-
-            token = await resp.Content.ReadFromJsonAsync(SerializationContext.Default.Token);
+            var model = await resp.Content.ReadFromJsonAsync(CommonSerializationContext.Default.OpenseaRoot);
+            token = _mapper.Map<Nft.Models.Opensea.Target.OpenseaRoot>(model);
             
-            _cache.Set(key, token, TimeSpan.FromMinutes(_minutesInCache));
+            _cache.Set(requestUri, token, TimeSpan.FromMinutes(_minutesInCache));
         }
         
         return token;
