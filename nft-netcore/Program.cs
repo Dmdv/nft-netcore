@@ -1,13 +1,9 @@
-using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Nft.Helpers;
 
@@ -27,14 +23,14 @@ builder.Services.AddHttpClient("opensea", c =>
 builder.Services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(builder.Configuration["GraphQLUri"], new SystemTextJsonSerializer()));
 builder.Services.AddControllers().AddJsonOptions(c =>
 {
-    // returning type with snake policy
+    // if required snake policy
     // c.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy();
     c.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     c.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
     c.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    c.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+    c.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString; // double and decimals
     c.JsonSerializerOptions.AddContext<SerializationContext>();
-}); 
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -67,6 +63,7 @@ app.UseHttpLogging();
 app.UseHttpsRedirection();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
+    // required when hid behind reverse proxy
     ForwardedHeaders = 
         ForwardedHeaders.XForwardedFor | 
         ForwardedHeaders.XForwardedHost | 

@@ -1,7 +1,7 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Nft.Helpers;
+using Nft.Models.Opensea.Source;
 
 namespace Nft.Controllers;
 
@@ -34,14 +34,14 @@ public class TokenController : ControllerBase, IDisposable
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
-        var key = $"{assetContractAddress}_{tokenId}";
+        var key = $"{assetContractAddress}/{tokenId}";
         if (!_cache.TryGetValue(key, out Token? token) || token == null)
         {
-            var url = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
+            var url = $"api/v1/asset/{key}/";
             var resp = await _httpClient.GetAsync(url);
             resp.EnsureSuccessStatusCode();
-        
-            token = await resp.Content.ReadFromJsonAsync<Token>(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+            token = await resp.Content.ReadFromJsonAsync(SerializationContext.Default.Token);
             
             _cache.Set(key, token, TimeSpan.FromMinutes(_minutesInCache));
         }

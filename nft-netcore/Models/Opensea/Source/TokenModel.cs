@@ -1,8 +1,8 @@
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
 
-using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
+namespace Nft.Models.Opensea.Source;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable NotAccessedPositionalProperty.Global

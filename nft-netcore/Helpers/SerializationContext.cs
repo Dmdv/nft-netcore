@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Nft.Models.Opensea.Source;
 
 namespace Nft.Helpers;
 
