@@ -6,6 +6,7 @@ using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
 using Nft.Helpers;
+using Nft.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,14 @@ builder.Services.AddSwaggerGen(o =>
 {
     // swagger schema with snake filter
     // o.SchemaFilter<SnakeCaseSchemaFilter>();
+    // Different schema ID for same type name
+    o.CustomSchemaIds(type => type.ToString());
+});
+
+// Mapping
+builder.Services.AddAutoMapper(c =>
+{
+    c.AddProfile<MappingProfile>();
 });
 
 var app = builder.Build();

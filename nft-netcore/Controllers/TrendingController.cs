@@ -1,7 +1,8 @@
+using AutoMapper;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Nft.Models.Icytools;
+using Nft.Models.Icytools.Target;
 
 namespace Nft.Controllers;
 
@@ -11,12 +12,14 @@ namespace Nft.Controllers;
 public class TrendingController : ControllerBase
 {
     private readonly IGraphQLClient _client;
+    private readonly IMapper _mapper;
     private readonly ILogger<TrendingController> _logger;
 
     // GET: Trending
-    public TrendingController(IGraphQLClient client, ILogger<TrendingController> logger)
+    public TrendingController(IGraphQLClient client, IMapper mapper, ILogger<TrendingController> logger)
     {
         _client = client;
+        _mapper = mapper;
         _logger = logger;
     }
 
@@ -67,9 +70,9 @@ public class TrendingController : ControllerBase
                         "
         };
 
-        var json = await _client.SendQueryAsync<TrendingCollectionsRoot>(query);
-
-        return json.Data.TrendingCollections;
+        var resp = await _client.SendQueryAsync<Nft.Models.Icytools.Source.Data>(query);
+        var dto = _mapper.Map<Data>(resp.Data);
+        return dto.TrendingCollections;
     }
 
     // // GET: Trending/5

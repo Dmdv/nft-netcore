@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Nft.Helpers;
@@ -12,6 +13,7 @@ public class TokenController : ControllerBase, IDisposable
 {
     private readonly ILogger<TokenController> _logger;
     private readonly IMemoryCache _cache;
+    private readonly IMapper _mapper;
     private readonly HttpClient _httpClient;
     private readonly int _minutesInCache;
 
@@ -19,10 +21,12 @@ public class TokenController : ControllerBase, IDisposable
         ILogger<TokenController> logger, 
         IHttpClientFactory clientFactory,
         IMemoryCache cache,
+        IMapper mapper,
         IConfiguration configuration)
     {
         _logger = logger;
         _cache = cache;
+        _mapper = mapper;
         _httpClient = clientFactory.CreateClient("opensea");
         _logger.LogInformation("Started Token controller");
         _minutesInCache = Convert.ToInt32(configuration["MinutesInCache"]);
