@@ -1,10 +1,9 @@
-using System.ComponentModel;
 using AutoMapper;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Nft.Arguments;
+using Nft.ArgumentsBinding;
 
 namespace Nft.Controllers;
 
@@ -27,19 +26,19 @@ public class TrendingController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{orderBy:OrderBy}", Name = "Trending_collections")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public Task<Models.Icytools.Target.TrendingCollections> Get(OrderBy orderBy)
+    public Task<Models.Icytools.Target.TrendingCollections> Get([FromQuery] TrendingArgs args)
     {
-        _logger.LogInformation("Fetching trending collection");
-
-        var key = $"trending-{orderBy}";
-            
+        var key = $"trending-orderby:{args.OrderBy}-sort:{args.SortDirection}";
+        
+        _logger.LogInformation(@"Fetching trending collection {Name}", key);
+        
         var query = new GraphQLRequest
         {
             Query = $@"
                         query Contracts($timePeriod: TrendingCollectionsTimePeriodEnum) {{
-                            trendingCollections(timePeriod: $timePeriod, orderBy: {orderBy.ToString().ToUpper()}) {{
+                            trendingCollections(timePeriod: $timePeriod, orderBy: {args.OrderBy.ToString().ToUpper()}) {{
                                 edges {{
                                     cursor
                                     node {{

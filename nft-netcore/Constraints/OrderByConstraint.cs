@@ -1,4 +1,4 @@
-using Nft.Arguments;
+using Nft.ArgumentsBinding;
 
 namespace Nft.Constraints;
 

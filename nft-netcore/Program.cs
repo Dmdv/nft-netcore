@@ -8,6 +8,7 @@ using Microsoft.Net.Http.Headers;
 using Nft.Constraints;
 using Nft.Helpers;
 using Nft.Mappers;
+using Nft.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +26,17 @@ builder.Services.AddHttpClient("opensea", c =>
 builder.Services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(builder.Configuration["GraphQLUri"], new SystemTextJsonSerializer()));
 builder.Services.AddControllers().AddJsonOptions(c =>
 {
+    // All enums convert to strings
+    c.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    
     // if required snake policy
     // c.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy();
     c.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     c.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
     c.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString; // double and decimals
+    // Serialization context for all source models generated at compile time
     c.JsonSerializerOptions.AddContext<CommonSerializationContext>();
+    
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,12 +47,14 @@ builder.Services.AddSwaggerGen(o =>
     // o.SchemaFilter<SnakeCaseSchemaFilter>();
     // Different schema ID for same type name
     o.CustomSchemaIds(type => type.ToString());
+    // All enum convert to strings
+    o.SchemaFilter<EnumSchemaFilter>();
 });
 
-builder.Services.Configure<RouteOptions>(o =>
-{
-    o.ConstraintMap.Add("OrderBy", typeof(OrderByConstraint));
-});
+// builder.Services.Configure<RouteOptions>(o =>
+// {
+//     o.ConstraintMap.Add("OrderBy", typeof(OrderByConstraint));
+// });
 
 // Mapping
 builder.Services.AddAutoMapper(c =>
