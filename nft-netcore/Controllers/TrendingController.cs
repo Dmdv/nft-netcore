@@ -1,8 +1,10 @@
+using System.ComponentModel;
 using AutoMapper;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Nft.Models.Icytools.Target;
+using Microsoft.Extensions.Caching.Memory;
+using Nft.Arguments;
 
 namespace Nft.Controllers;
 
@@ -13,31 +15,35 @@ public class TrendingController : ControllerBase
 {
     private readonly IGraphQLClient _client;
     private readonly IMapper _mapper;
+    private readonly IMemoryCache _cache;
     private readonly ILogger<TrendingController> _logger;
 
     // GET: Trending
-    public TrendingController(IGraphQLClient client, IMapper mapper, ILogger<TrendingController> logger)
+    public TrendingController(IGraphQLClient client, IMapper mapper, IMemoryCache cache, ILogger<TrendingController> logger)
     {
         _client = client;
         _mapper = mapper;
+        _cache = cache;
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet("{orderBy:OrderBy}", Name = "Trending_collections")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<TrendingCollections> Get()
+    public Task<Models.Icytools.Target.TrendingCollections> Get(OrderBy orderBy)
     {
         _logger.LogInformation("Fetching trending collection");
+
+        var key = $"trending-{orderBy}";
             
         var query = new GraphQLRequest
         {
-            Query = @"
-                        query Contracts($timePeriod: TrendingCollectionsTimePeriodEnum) {
-                            trendingCollections(timePeriod: $timePeriod, orderBy: SALES) {
-                                edges {
+            Query = $@"
+                        query Contracts($timePeriod: TrendingCollectionsTimePeriodEnum) {{
+                            trendingCollections(timePeriod: $timePeriod, orderBy: {orderBy.ToString().ToUpper()}) {{
+                                edges {{
                                     cursor
-                                    node {
-                                        ... on ERC721Contract {
+                                    node {{
+                                        ... on ERC721Contract {{
                                             name
                                             symbol
                                             isVerified
@@ -49,30 +55,34 @@ public class TrendingController : ControllerBase
                                             unsafeOpenseaImageUrl
                                             unsafeOpenseaSlug
                                             unsafeOpenseaExternalUrl               
-                                            stats {
+                                            stats {{
                                                 volume
                                                 average
                                                 ceiling
                                                 floor
                                                 totalSales                        
-                                            }
-                                        }
-                                    }
-                                }
-                                pageInfo {
+                                            }}
+                                        }}
+                                    }}
+                                }}
+                                pageInfo {{
                                     hasNextPage
                                     hasPreviousPage
                                     startCursor
                                     endCursor
-                                }
-                            }
-                        }
+                                }}
+                            }}
+                        }}
                         "
         };
 
-        var resp = await _client.SendQueryAsync<Nft.Models.Icytools.Source.Data>(query);
-        var dto = _mapper.Map<Data>(resp.Data);
-        return dto.TrendingCollections;
+        return _cache.GetOrCreateAsync(key, async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
+            var resp = await _client.SendQueryAsync<Models.Icytools.Source.Data>(query);
+            var dto = _mapper.Map<Models.Icytools.Target.Data>(resp.Data);
+            return dto.TrendingCollections;
+        });
     }
 
     // // GET: Trending/5

@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Nft.Helpers;
-using Nft.Models.Opensea.Source;
 
 namespace Nft.Controllers;
 
@@ -34,17 +33,17 @@ public class TokenController : ControllerBase, IDisposable
 
     // GET: token/5/5
     [HttpGet("{assetContractAddress}/{tokenId}", Name = "GetToken")]
-    public async Task<Nft.Models.Opensea.Target.OpenseaRoot?> Get(string assetContractAddress, string tokenId)
+    public async Task<Models.Opensea.Target.OpenseaRoot?> Get(string assetContractAddress, string tokenId)
     {
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
         var requestUri = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
-        if (!_cache.TryGetValue(requestUri, out Nft.Models.Opensea.Target.OpenseaRoot? token) || token == null)
+        if (!_cache.TryGetValue(requestUri, out Models.Opensea.Target.OpenseaRoot? token) || token == null)
         {
             var resp = await _httpClient.GetAsync(requestUri);
             resp.EnsureSuccessStatusCode();
             var model = await resp.Content.ReadFromJsonAsync(CommonSerializationContext.Default.OpenseaRoot);
-            token = _mapper.Map<Nft.Models.Opensea.Target.OpenseaRoot>(model);
+            token = _mapper.Map<Models.Opensea.Target.OpenseaRoot>(model);
             
             _cache.Set(requestUri, token, TimeSpan.FromMinutes(_minutesInCache));
         }

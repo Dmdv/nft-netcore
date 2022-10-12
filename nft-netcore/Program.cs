@@ -5,6 +5,7 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
+using Nft.Constraints;
 using Nft.Helpers;
 using Nft.Mappers;
 
@@ -40,6 +41,11 @@ builder.Services.AddSwaggerGen(o =>
     // o.SchemaFilter<SnakeCaseSchemaFilter>();
     // Different schema ID for same type name
     o.CustomSchemaIds(type => type.ToString());
+});
+
+builder.Services.Configure<RouteOptions>(o =>
+{
+    o.ConstraintMap.Add("OrderBy", typeof(OrderByConstraint));
 });
 
 // Mapping
