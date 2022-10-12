@@ -5,7 +5,6 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Net.Http.Headers;
-using Nft.Constraints;
 using Nft.Helpers;
 using Nft.Mappers;
 using Nft.Swagger;
@@ -82,7 +81,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpLogging();
-app.UseHttpsRedirection();
+// HTTPS enabling
+// app.UseHttpsRedirection();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     // required when hid behind reverse proxy
