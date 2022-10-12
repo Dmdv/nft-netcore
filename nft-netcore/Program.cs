@@ -28,6 +28,8 @@ builder.Services.AddControllers().AddJsonOptions(c =>
 {
     // All enums convert to strings
     c.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    // Ignore when value is NULL
+    c.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     
     // if required snake policy
     // c.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy();

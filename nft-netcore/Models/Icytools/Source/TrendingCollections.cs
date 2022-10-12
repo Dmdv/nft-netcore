@@ -44,7 +44,7 @@ public class Node
     public string TokenStandard { get; set; }
 
     [JsonPropertyName("circulatingSupply")]
-    public int CirculatingSupply { get; set; }
+    public int? CirculatingSupply { get; set; }
 
     [JsonPropertyName("unsafeOpenseaBannerImageUrl")]
     public string UnsafeOpenseaBannerImageUrl { get; set; }
@@ -89,19 +89,19 @@ public class IcytoolsRoot
 public class Stats
 {
     [JsonPropertyName("volume")]
-    public double Volume { get; set; }
+    public double? Volume { get; set; }
 
     [JsonPropertyName("average")]
-    public double Average { get; set; }
+    public double? Average { get; set; }
 
     [JsonPropertyName("ceiling")]
-    public double Ceiling { get; set; }
+    public double? Ceiling { get; set; }
 
     [JsonPropertyName("floor")]
-    public double Floor { get; set; }
+    public double? Floor { get; set; }
 
     [JsonPropertyName("totalSales")]
-    public int TotalSales { get; set; }
+    public int? TotalSales { get; set; }
 }
 
 public class TrendingCollections
