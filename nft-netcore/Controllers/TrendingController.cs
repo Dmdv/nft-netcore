@@ -75,7 +75,7 @@ public class TrendingController : ControllerBase
             // =====================================
 
             var markets = new StringBuilder().AppendJoin(",", args.Markets.Market.Select(x => x.String().ToUpper()));
-            var str = @$"{{ {args.Markets.Op.String().ToLowerFirst()} :[{markets}] }}";
+            var str = @$"{{{args.Markets.Op.String().ToLowerFirst()}:[{markets}]}}";
             sc.Add($"marketplace: {str}");
         }
         

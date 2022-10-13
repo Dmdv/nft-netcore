@@ -4,6 +4,8 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable NotAccessedPositionalProperty.Global
 
+using System.Text;
+
 namespace Nft.ArgumentsBinding;
 
 public record TrendingArgs
@@ -30,7 +32,14 @@ public enum TimePeriod
     SEVEN_DAYS
 }
 
-public record MarketPlaceFilter(OrderMarketplaceInput Op, Marketplace[] Market);
+public record MarketPlaceFilter(OrderMarketplaceInput Op, Marketplace[] Market)
+{
+    public override string ToString()
+    {
+        var sb = new StringBuilder().AppendJoin('+', Market.Select(x => x.String()));
+        return $"{Op.String()}:{sb}";
+    }
+}
 
 public enum Marketplace
 {
