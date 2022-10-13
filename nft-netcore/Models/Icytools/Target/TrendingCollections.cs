@@ -14,7 +14,7 @@ namespace Nft.Models.Icytools.Target;
 public class Data
 {
     [JsonPropertyName("trendingCollections")]
-    public TrendingCollections TrendingCollections { get; set; }
+    public TrendingCollections? TrendingCollections { get; set; }
 }
 
 public class Edge

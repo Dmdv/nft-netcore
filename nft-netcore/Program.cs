@@ -3,7 +3,9 @@ using System.Text.Json.Serialization;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Net.Http.Headers;
 using Nft.Constraints;
 using Nft.Helpers;
@@ -64,7 +66,22 @@ builder.Services.AddAutoMapper(c =>
     c.AddProfile<MappingProfile>();
 });
 
+// Health
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
+
+// Health
+app.MapHealthChecks("/healthz", new HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
