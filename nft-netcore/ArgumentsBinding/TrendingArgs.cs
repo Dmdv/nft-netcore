@@ -32,7 +32,7 @@ public enum TimePeriod
     SEVEN_DAYS
 }
 
-public record MarketPlaceFilter(OrderMarketplaceInput Op, Marketplace[] Market)
+public record MarketPlaceFilter(EqualityInput Op, Marketplace[] Market)
 {
     public override string ToString()
     {
@@ -53,11 +53,23 @@ public enum Marketplace
     Zerox
 }
 
-public enum OrderMarketplaceInput
+public enum EqualityInput
 {
     Eq,
     In,
     NotIn,
+}
+
+public enum StringEqualityInput
+{
+    Eq,
+    StartsWith,
+    EndsWith,
+    Contains,
+    IEq,
+    IStartsWith,
+    IEndsWith,
+    IContains,
 }
 
 public enum OrderBy
@@ -119,24 +131,58 @@ public static class EnumsZeroAllocations
         };
     }
     
-    public static string String(this OrderMarketplaceInput en)
+    public static string String(this EqualityInput en)
     {
         return en switch
         {
-            OrderMarketplaceInput.Eq => nameof(OrderMarketplaceInput.Eq),
-            OrderMarketplaceInput.In => nameof(OrderMarketplaceInput.In),
-            OrderMarketplaceInput.NotIn => nameof(OrderMarketplaceInput.NotIn),
+            EqualityInput.Eq => nameof(EqualityInput.Eq),
+            EqualityInput.In => nameof(EqualityInput.In),
+            EqualityInput.NotIn => nameof(EqualityInput.NotIn),
             _ => throw new ArgumentOutOfRangeException(nameof(en), en, null)
         };
     }
     
-    public static string String(this OrderMarketplaceInput? en)
+    public static string String(this EqualityInput? en)
     {
         return en switch
         {
-            OrderMarketplaceInput.Eq => nameof(OrderMarketplaceInput.Eq),
-            OrderMarketplaceInput.In => nameof(OrderMarketplaceInput.In),
-            OrderMarketplaceInput.NotIn => nameof(OrderMarketplaceInput.NotIn),
+            EqualityInput.Eq => nameof(EqualityInput.Eq),
+            EqualityInput.In => nameof(EqualityInput.In),
+            EqualityInput.NotIn => nameof(EqualityInput.NotIn),
+            null => "",
+            _ => throw new ArgumentOutOfRangeException(nameof(en), en, null)
+        };
+    }
+    
+    public static string String(this StringEqualityInput en)
+    {
+        return en switch
+        {
+            StringEqualityInput.Eq => nameof(StringEqualityInput.Eq),
+            StringEqualityInput.Contains => nameof(StringEqualityInput.Contains),
+            StringEqualityInput.EndsWith => nameof(StringEqualityInput.EndsWith),
+            StringEqualityInput.StartsWith => nameof(StringEqualityInput.StartsWith),
+            StringEqualityInput.IEq => nameof(StringEqualityInput.IEq),
+            StringEqualityInput.IStartsWith => nameof(StringEqualityInput.IStartsWith),
+            StringEqualityInput.IEndsWith => nameof(StringEqualityInput.IEndsWith),
+            StringEqualityInput.IContains => nameof(StringEqualityInput.IContains),
+            _ => throw new ArgumentOutOfRangeException(nameof(en), en, null)
+        };
+    }
+    
+    public static string String(this StringEqualityInput? en)
+    {
+        return en switch
+        {
+            StringEqualityInput.Eq => nameof(StringEqualityInput.Eq),
+            StringEqualityInput.Contains => nameof(StringEqualityInput.Contains),
+            StringEqualityInput.EndsWith => nameof(StringEqualityInput.EndsWith),
+            StringEqualityInput.StartsWith => nameof(StringEqualityInput.StartsWith),
+            StringEqualityInput.IEq => nameof(StringEqualityInput.IEq),
+            StringEqualityInput.IStartsWith => nameof(StringEqualityInput.IStartsWith),
+            StringEqualityInput.IEndsWith => nameof(StringEqualityInput.IEndsWith),
+            StringEqualityInput.IContains => nameof(StringEqualityInput.IContains),
+            null => "",
             _ => throw new ArgumentOutOfRangeException(nameof(en), en, null)
         };
     }

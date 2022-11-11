@@ -1,21 +1,21 @@
 namespace Nft.Core;
 
 public ref struct FastStringBuilder {
-    private Span<char> span;
-    private int pos;
+    private Span<char> _span;
+    private int _pos;
 
     public FastStringBuilder(int maxlength) {
-        span = new Span<char>(new char[maxlength]);
-        pos = 0;
+        _span = new Span<char>(new char[maxlength]);
+        _pos = 0;
     }
 
     public void Append(ReadOnlySpan<char> str) {
-        if (pos + str.Length > span.Length) throw new IndexOutOfRangeException();
-        str.CopyTo(span.Slice(pos));
-        pos += str.Length;
+        if (_pos + str.Length > _span.Length) throw new IndexOutOfRangeException();
+        str.CopyTo(_span[_pos..]);
+        _pos += str.Length;
     }
 
     public override string ToString() {
-        return span.Slice(0, pos).ToString();
+        return _span[.._pos].ToString();
     }
 }

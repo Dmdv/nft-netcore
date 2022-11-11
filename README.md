@@ -1,3 +1,3 @@
-# NFT Explorer API
+# NFT API
 
-REST API over the ZOO of APIs
+NFT APIs ZOO Adapter

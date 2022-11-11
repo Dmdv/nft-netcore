@@ -1,7 +1,8 @@
+// ReSharper disable ClassNeverInstantiated.Global
+
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-// ReSharper disable ClassNeverInstantiated.Global
 
 namespace Nft.Swagger;
 

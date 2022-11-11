@@ -2,7 +2,7 @@ using GraphQL.Client.Abstractions.Utilities;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Nft.Helpers;
+namespace Nft.Serialization;
 
 public class SnakeCaseSchemaFilter : ISchemaFilter
 {

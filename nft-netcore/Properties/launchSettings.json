@@ -10,7 +10,14 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "OPENSEA_API_KEY": "YOUR-KEY",
-        "ASPNETCORE_URLS": "http://localhost:5287"
+        "BLOCKDAEMON_API_KEY": "lzvyUjAxnZ0MBhu2OcAjR7qpSe0sJAcbM-O-OBahBtfSad5V",
+        "BLOCKDAEMON_NFT_URL" : "https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/",
+        "ASPNETCORE_URLS": "http://localhost:5287",
+        "REDIS_HOST": "127.0.0.1",
+        "REDIS_PORT": "6379",
+        "REDIS_PASSWORD": "redis-minikube",
+        "REDIS_CLIENT_NAME": "nft-explore",
+        "REDIS_INSTANCE_NAME": "nft-cache"
       }
     },
     "nft_netcore_prod": {
@@ -22,6 +29,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production",
         "OPENSEA_API_KEY": "YOUR-KEY",
+        "BLOCKDAEMON_API_KEY": "YOUR-KEY",
+        "BLOCKDAEMON_NFT_URL" : "https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/",
         "ASPNETCORE_URLS": "http://localhost:5287"
       }
     }

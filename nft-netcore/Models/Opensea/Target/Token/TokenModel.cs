@@ -4,18 +4,17 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable IdentifierTypo
 // ReSharper disable UnusedMember.Global
-#pragma warning disable CS8618
-
-namespace Nft.Models.Opensea.Target;
-
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable CheckNamespace
 // ReSharper disable StringLiteralTypo
 // ReSharper disable IdentifierTypo
+// ReSharper disable CollectionNeverUpdated.Global
+#pragma warning disable CS8618
 
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-public class Asset
+namespace Nft.Models.Opensea.Target.Token;
+
+public class SaleAsset
 {
     public object Decimals { get; set; }
     public string TokenId { get; set; }
@@ -84,7 +83,6 @@ public class Collection
     public object InstagramUsername { get; set; }
     public object WikiUrl { get; set; }
     public bool IsNsfw { get; set; }
-    public Fees Fees { get; set; }
     public bool IsRarityEnabled { get; set; }
 }
 
@@ -101,15 +99,9 @@ public class DisplayData
     public string CardDisplayStyle { get; set; }
 }
 
-public class Fees
-{
-    public SellerFees SellerFees { get; set; }
-    public OpenseaFees OpenseaFees { get; set; }
-}
-
 public class LastSale
 {
-    public Asset Asset { get; set; }
+    public SaleAsset Asset { get; set; }
     public object AssetBundle { get; set; }
     public string EventType { get; set; }
     public DateTime EventTimestamp { get; set; }
@@ -119,11 +111,6 @@ public class LastSale
     public object Transaction { get; set; }
     public DateTime CreatedDate { get; set; }
     public string Quantity { get; set; }
-}
-
-public class OpenseaFees
-{
-    public int _0x0000a26b00c1f0df003000390027140000faa719 { get; set; }
 }
 
 public class Owner
@@ -146,7 +133,7 @@ public class PaymentToken
     // public double UsdPrice { get; set; }
 }
 
-public class OpenseaRoot
+public class TokenViewModel
 {
     public int Id { get; set; }
     public int NumSales { get; set; }
@@ -185,11 +172,6 @@ public class OpenseaRoot
     public object Ownership { get; set; }
     public object HighestBuyerCommitment { get; set; }
     public string TokenId { get; set; }
-}
-
-public class SellerFees
-{
-    public int _0xaae7ac476b117bccafe2f05f582906be44bc8ff1 { get; set; }
 }
 
 public class Stats

@@ -1,22 +1,22 @@
-using System.Text.Json.Serialization;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable CheckNamespace
 // ReSharper disable StringLiteralTypo
 // ReSharper disable IdentifierTypo
 // ReSharper disable UnusedMember.Global
-#pragma warning disable CS8618
-
-namespace Nft.Models.Opensea.Source;
-
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable CheckNamespace
 // ReSharper disable StringLiteralTypo
 // ReSharper disable IdentifierTypo
-
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
-public class Asset
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+#pragma warning disable CS8618
+using System.Text.Json.Serialization;
+
+namespace Nft.Models.Opensea.Source.Token;
+
+public class SaleAsset
 {
     [JsonPropertyName("decimals")]
     public object Decimals { get; set; }
@@ -132,9 +132,6 @@ public class Collection
     [JsonPropertyName("discord_url")]
     public string DiscordUrl { get; set; }
 
-    [JsonPropertyName("display_data")]
-    public DisplayData DisplayData { get; set; }
-
     [JsonPropertyName("external_url")]
     public string ExternalUrl { get; set; }
 
@@ -201,9 +198,6 @@ public class Collection
     [JsonPropertyName("is_nsfw")]
     public bool IsNsfw { get; set; }
 
-    [JsonPropertyName("fees")]
-    public Fees Fees { get; set; }
-
     [JsonPropertyName("is_rarity_enabled")]
     public bool IsRarityEnabled { get; set; }
 }
@@ -223,25 +217,10 @@ public class Creator
     public string Config { get; set; }
 }
 
-public class DisplayData
-{
-    [JsonPropertyName("card_display_style")]
-    public string CardDisplayStyle { get; set; }
-}
-
-public class Fees
-{
-    [JsonPropertyName("seller_fees")]
-    public SellerFees SellerFees { get; set; }
-
-    [JsonPropertyName("opensea_fees")]
-    public OpenseaFees OpenseaFees { get; set; }
-}
-
 public class LastSale
 {
     [JsonPropertyName("asset")]
-    public Asset Asset { get; set; }
+    public SaleAsset Asset { get; set; }
 
     [JsonPropertyName("asset_bundle")]
     public object AssetBundle { get; set; }
@@ -269,12 +248,6 @@ public class LastSale
 
     [JsonPropertyName("quantity")]
     public string Quantity { get; set; }
-}
-
-public class OpenseaFees
-{
-    [JsonPropertyName("0x0000a26b00c1f0df003000390027140000faa719")]
-    public int _0x0000a26b00c1f0df003000390027140000faa719 { get; set; }
 }
 
 public class Owner
@@ -319,7 +292,7 @@ public class PaymentToken
     // public double UsdPrice { get; set; }
 }
 
-public class OpenseaRoot
+public class TokenModel
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
@@ -431,12 +404,6 @@ public class OpenseaRoot
 
     [JsonPropertyName("token_id")]
     public string TokenId { get; set; }
-}
-
-public class SellerFees
-{
-    [JsonPropertyName("0xaae7ac476b117bccafe2f05f582906be44bc8ff1")]
-    public int _0xaae7ac476b117bccafe2f05f582906be44bc8ff1 { get; set; }
 }
 
 public class TokenStat
@@ -590,4 +557,10 @@ public class User
 {
     [JsonPropertyName("username")]
     public string Username { get; set; }
+}
+
+public class DisplayData
+{
+    [JsonPropertyName("card_display_style")]
+    public string CardDisplayStyle;
 }

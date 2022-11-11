@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Nft.Helpers;
+namespace Nft.Serialization;
 
 internal class WeatherForecast
 {
@@ -31,7 +31,6 @@ internal class SerializationExample
             new WeatherForecastContext(
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)));
         
-        var weatherForecast = JsonSerializer.Deserialize<WeatherForecast>(
-            jsonString, WeatherForecastContext.Default.WeatherForecast);
+        var weatherForecast = JsonSerializer.Deserialize<WeatherForecast>(jsonString, WeatherForecastContext.Default.WeatherForecast);
     }
 }
