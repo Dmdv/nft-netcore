@@ -43,10 +43,12 @@ public class TrendingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<Models.Icytools.Target.Trending.TrendingCollectionsVm?> Get([FromQuery] TrendingArgs query)
     {
-        var key = query.ToString();
+        if (query == null) throw new ArgumentNullException(nameof(query));
+        
+        var key = query.ToString()!;
 
-        _logger.LogInformation(@"Fetching trending collection {Query}", Request.GetEncodedPathAndQuery());
-        _logger.LogInformation(@"Fetching trending collection {Name}", key);
+        _logger.LogInformation("Fetching trending collection {Query}", Request.GetEncodedPathAndQuery());
+        _logger.LogInformation("Fetching trending collection {Name}", key);
         
         List<string> paramArr = new ();
 
@@ -91,7 +93,7 @@ public class TrendingController : ControllerBase
             // =====================================
 
             var markets = new StringBuilder().AppendJoin(",", query.Markets.Market.Select(x => x.String().ToUpper()));
-            var str = @$"{{{query.Markets.Op.String().ToLowerFirst()}:[{markets}]}}";
+            var str = $"{{{query.Markets.Op.String().ToLowerFirst()}:[{markets}]}}";
             paramArr.Add($"marketplace: {str}");
         }
         
@@ -113,7 +115,7 @@ public class TrendingController : ControllerBase
             filter = $"({sb})";
         }
 
-        _logger.LogInformation(@"Filter applied {Filter}", filter);
+        _logger.LogInformation("Filter applied {Filter}", filter);
 
         var qlRequest = new GraphQLRequest
         {

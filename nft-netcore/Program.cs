@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -11,9 +12,9 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Net.Http.Headers;
 using Nft.Constraints;
 using Nft.Mappers;
+using Nft.Serialization;
 using Nft.Swagger;
 using StackExchange.Redis;
-using CommonSerializationContext = Nft.Serialization.CommonSerializationContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,17 +72,27 @@ builder.Services.AddHttpClient("opensea", c =>
 {
     c.BaseAddress = new Uri("https://api.opensea.io/");
     c.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
-    c.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "centralex");
+    c.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "opensea");
     c.DefaultRequestHeaders.Add("X-API-KEY", Environment.GetEnvironmentVariable("OPENSEA_API_KEY"));
 });
 builder.Services.AddHttpClient("blockdaemon", c =>
 {
     c.BaseAddress = new Uri($"{Environment.GetEnvironmentVariable("BLOCKDAEMON_NFT_URL")}");
     c.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
-    c.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "centralex");
-    c.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer",$"{Environment.GetEnvironmentVariable("BLOCKDAEMON_API_KEY")}");
+    c.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "blockdaemon");
+    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",$"{Environment.GetEnvironmentVariable("BLOCKDAEMON_API_KEY")}");
 });
-builder.Services.AddScoped<IGraphQLClient>(_ => new GraphQLHttpClient(builder.Configuration["GraphQLUri"], new SystemTextJsonSerializer()));
+builder.Services.AddScoped<IGraphQLClient>(_ =>
+{
+    var endPoint = builder.Configuration["GraphQLUri"];
+    if (string.IsNullOrEmpty(endPoint))
+    {
+        throw new ArgumentException("GraphQLUri is not configured");
+    }
+    
+    return new GraphQLHttpClient(endPoint, new SystemTextJsonSerializer());
+});
+
 builder.Services.AddControllers().AddJsonOptions(c =>
 {
     // All enums convert to strings
@@ -122,7 +133,7 @@ builder.Services.AddAutoMapper(c => { c.AddProfile<MappingProfile>(); });
 builder.Services
     .AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "service" })
-    .AddRedis(c =>
+    .AddRedis(_ =>
         {
             var host = Environment.GetEnvironmentVariable("REDIS_HOST");
             var port = Environment.GetEnvironmentVariable("REDIS_PORT");

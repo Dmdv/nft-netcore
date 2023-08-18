@@ -57,7 +57,7 @@ public enum EqualityInput
 {
     Eq,
     In,
-    NotIn,
+    NotIn
 }
 
 public enum StringEqualityInput
@@ -69,7 +69,7 @@ public enum StringEqualityInput
     IEq,
     IStartsWith,
     IEndsWith,
-    IContains,
+    IContains
 }
 
 public enum OrderBy
@@ -79,7 +79,7 @@ public enum OrderBy
     // [EnumMember(Value = "SALES")]
     Sales,
     // [EnumMember(Value = "VOLUME")]
-    Volume,
+    Volume
 }
 
 public enum OrderDirection

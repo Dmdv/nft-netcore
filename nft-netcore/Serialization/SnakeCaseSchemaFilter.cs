@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Nft.Serialization;
 
+// ReSharper disable once UnusedType.Global
 public class SnakeCaseSchemaFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
@@ -11,9 +12,8 @@ public class SnakeCaseSchemaFilter : ISchemaFilter
         if (schema.Properties == null) return;
         if (schema.Properties.Count == 0) return;
 
-        var keys = schema.Properties.Keys;
         var newProperties = new Dictionary<string, OpenApiSchema>();
-        foreach (var key in keys)
+        foreach (var key in schema.Properties.Keys)
         {
             newProperties[key.ToSnakeCase()] = schema.Properties[key];
         }

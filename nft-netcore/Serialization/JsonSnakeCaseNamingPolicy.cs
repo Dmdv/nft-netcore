@@ -3,6 +3,7 @@ using System.Text.Json;
 
 namespace Nft.Serialization;
 
+// ReSharper disable once UnusedType.Global
 public class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
 {
     private const char Separator = '_';

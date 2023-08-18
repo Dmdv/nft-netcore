@@ -1,5 +1,6 @@
 namespace Nft.Core;
 
+// ReSharper disable UnusedType.Global
 public ref struct FastStringBuilder {
     private Span<char> _span;
     private int _pos;
@@ -8,7 +9,8 @@ public ref struct FastStringBuilder {
         _span = new Span<char>(new char[maxlength]);
         _pos = 0;
     }
-
+    
+    // ReSharper disable once UnusedMember.Global
     public void Append(ReadOnlySpan<char> str) {
         if (_pos + str.Length > _span.Length) throw new IndexOutOfRangeException();
         str.CopyTo(_span[_pos..]);

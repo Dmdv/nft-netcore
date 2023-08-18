@@ -39,20 +39,23 @@ public class TokenController : ControllerBase, IDisposable
         _logger.LogInformation("Token: {AssetContractAddress} and {TokenId}", assetContractAddress, tokenId);
         
         var requestUri = $"api/v1/asset/{assetContractAddress}/{tokenId}/";
-        if (!_cache.TryGetValue(requestUri, out Models.Opensea.Target.Token.TokenViewModel? token) || token == null)
+        if (_cache.TryGetValue(requestUri, out Models.Opensea.Target.Token.TokenViewModel? token) &&
+            token != null)
         {
-            TokenModel? model;
-            using (var resp = await _httpClient.GetAsync(requestUri))
-            {
-                resp.EnsureSuccessStatusCode();
-                model = await resp.Content.ReadFromJsonAsync(CommonSerializationContext.Default.TokenModel);
-            }
-
-            token = _mapper.Map<Models.Opensea.Target.Token.TokenViewModel>(model);
-            
-            _cache.Set(requestUri, token, TimeSpan.FromMinutes(_minutesInCache));
+            return token;
         }
         
+        TokenModel? model;
+        using (var resp = await _httpClient.GetAsync(requestUri))
+        {
+            resp.EnsureSuccessStatusCode();
+            model = await resp.Content.ReadFromJsonAsync(CommonSerializationContext.Default.TokenModel);
+        }
+
+        token = _mapper.Map<Models.Opensea.Target.Token.TokenViewModel>(model);
+            
+        _cache.Set(requestUri, token, TimeSpan.FromMinutes(_minutesInCache));
+
         return token;
     }
 

@@ -17,20 +17,23 @@ internal partial class WeatherForecastContext : JsonSerializerContext
 {
 }
 
+// ReSharper disable once UnusedType.Global
 internal class SerializationExample
 {
-    public void Do()
+    // ReSharper disable once UnusedMember.Global
+    public static void Do()
     {
         WeatherForecast wf = new() { Data = true, DataList = new List<object> { true, 1 } };
         
-        var jsonString = JsonSerializer.Serialize(wf, WeatherForecastContext.Default.WeatherForecast);
+        // NOTE: This is default serialization
+        // var jsonString = JsonSerializer.Serialize(wf, WeatherForecastContext.Default.WeatherForecast);
         
-        jsonString = JsonSerializer.Serialize(
+        var jsonString = JsonSerializer.Serialize(
             wf,
             typeof(WeatherForecast),
             new WeatherForecastContext(
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)));
         
-        var weatherForecast = JsonSerializer.Deserialize<WeatherForecast>(jsonString, WeatherForecastContext.Default.WeatherForecast);
+        _ = JsonSerializer.Deserialize(jsonString, WeatherForecastContext.Default.WeatherForecast);
     }
 }

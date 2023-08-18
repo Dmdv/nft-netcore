@@ -4,13 +4,13 @@ using GraphQL;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
+// using Microsoft.Extensions.Caching.Memory;
 using Nft.ArgumentsBinding;
-using Nft.Models.Blockdaemon.Target;
+// using Nft.Models.Blockdaemon.Target;
 using Nft.Models.Icytools.Target.CollectionItems;
-using NuGet.Packaging.Signing;
-using CommonSerializationContext = Nft.Serialization.CommonSerializationContext;
-using TokenViewModel = Nft.Models.Blockdaemon.Target.TokenViewModel;
+// using NuGet.Packaging.Signing;
+// using CommonSerializationContext = Nft.Serialization.CommonSerializationContext;
+// using TokenViewModel = Nft.Models.Blockdaemon.Target.TokenViewModel;
 
 namespace Nft.Controllers;
 
@@ -21,31 +21,30 @@ public class CollectionController : ControllerBase
 {
     private readonly ILogger<CollectionController> _logger;
     private readonly IGraphQLClient _qlClient;
-
-    private readonly IMemoryCache _cache;
     private readonly IMapper _mapper;
-
+    
+    // private readonly IMemoryCache _cache;
     // private readonly HttpClient _osClient;
-    private readonly HttpClient _bdClient;
-    private readonly int _minutesInCache;
+    // private readonly HttpClient _bdClient;
+    // private readonly int _minutesInCache;
 
     public CollectionController(
         ILogger<CollectionController> logger,
-        IHttpClientFactory clientFactory,
         IGraphQLClient qlClient,
-        IMemoryCache cache,
-        IMapper mapper, 
-        IConfiguration configuration
+        IMapper mapper
+        // IHttpClientFactory clientFactory
+        // IMemoryCache cache,
+        // IConfiguration configuration
     )
     {
         _logger = logger;
         _qlClient = qlClient;
-        _cache = cache;
+        // _cache = cache;
         _mapper = mapper;
         // _osClient = clientFactory.CreateClient("opensea");
-        _bdClient = clientFactory.CreateClient("blockdaemon");
+        // _bdClient = clientFactory.CreateClient("blockdaemon");
         _logger.LogInformation("Started Token controller");
-        _minutesInCache = Convert.ToInt32(configuration["MinutesInCache"]);
+        // _minutesInCache = Convert.ToInt32(configuration["MinutesInCache"]);
     }
 
     // This uses opensea (1 request)
